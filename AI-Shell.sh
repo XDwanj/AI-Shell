@@ -155,7 +155,7 @@ fi
 
 # 检查是否有额外的参数作为 POST 请求的主体
 if [ -n "$1" ] && [ "$1" != "seturl" ] && [ "$1" != "setkey" ] && [ "$1" != "setmodel" ] && [ "$1" != "setmax" ] && [ "$1" != "settemp" ]; then
-    USER_MESSAGE="$1"
+    USER_MESSAGE="$*"
 else
     echo "请输入你要执行的操作。"
     exit 1
