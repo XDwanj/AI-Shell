@@ -42,7 +42,7 @@ write_config() {
     local value="$2"
     if grep -q "^$key=" "$CONFIG_FILE"; then
         # 如果存在，更新
-        sed -i "s/^$key=.*/$key=$value/" "$CONFIG_FILE"
+        sed -i "s|^$key=.*|$key=$value|" "$CONFIG_FILE"
     else
         # 如果不存在，添加
         echo "$key=$value" >> "$CONFIG_FILE"
