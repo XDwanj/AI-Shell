@@ -21,12 +21,12 @@ DEFAULT_TEMPERATURE=0.7
 
 # 检查配置目录是否存在，如果不存在则创建
 if [ ! -d "$CONFIG_DIR" ]; then
-    sudo mkdir -p "$CONFIG_DIR"
+    mkdir -p "$CONFIG_DIR"
 fi
 
 # 检查配置文件是否存在，如果不存在则创建
 if [ ! -f "$CONFIG_FILE" ]; then
-    sudo touch "$CONFIG_FILE"
+    touch "$CONFIG_FILE"
     echo "初次使用请提供 URL、API_KEY、模型。"
 fi
 
