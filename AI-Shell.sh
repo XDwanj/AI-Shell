@@ -18,6 +18,7 @@ DEFAULT_URL="https://api.openai.com/v1/chat/completions"  # 默认 URL
 DEFAULT_MODEL="gpt-4o-mini"
 DEFAULT_MAX_TOKENS=1000
 DEFAULT_TEMPERATURE=0.7
+SHOW_DATA=false  # 新增变量，用于控制是否显示data内容
 
 # 检查配置目录是否存在，如果不存在则创建
 if [ ! -d "$CONFIG_DIR" ]; then
@@ -113,6 +114,15 @@ case "$1" in
             exit 1
         fi
         ;;
+    config)
+        echo "当前配置:"
+        echo "URL = $(read_config "URL" || echo "未设置，将使用默认值 $DEFAULT_URL")"
+        echo "API_KEY = $(read_config "API_KEY" || echo "未设置")"
+        echo "MODEL = $(read_config "MODEL" || echo "未设置，将使用默认值 $DEFAULT_MODEL")"
+        echo "MAX_TOKENS = $(read_config "MAX_TOKENS" || echo "未设置，将使用默认值 $DEFAULT_MAX_TOKENS")"
+        echo "TEMPERATURE = $(read_config "TEMPERATURE" || echo "未设置，将使用默认值 $DEFAULT_TEMPERATURE")"
+        exit 0
+        ;;
 esac
 
 # 如果 URL 为空，提示用户输入
@@ -155,11 +165,24 @@ fi
 
 # 检查是否有额外的参数作为 POST 请求的主体
 if [ -n "$1" ] && [ "$1" != "seturl" ] && [ "$1" != "setkey" ] && [ "$1" != "setmodel" ] && [ "$1" != "setmax" ] && [ "$1" != "settemp" ]; then
+    # 检查是否有-s选项
+    if [ "$1" = "-s" ]; then
+        SHOW_DATA=true
+        shift  # 移除-s参数
+    fi
+    
+    # 如果所有参数都被移除，则提示用户
+    if [ -z "$1" ]; then
+        echo "请输入你要执行的操作。"
+        exit 1
+    fi
+    
     USER_MESSAGE="$*"
 else
     echo "请输入你要执行的操作。"
     exit 1
 fi
+
 # 函数：替换换行符和制表符
 replace_newline_tab() {
     local input_string="$1"
@@ -170,7 +193,13 @@ replace_newline_tab() {
     echo "$output_string"
 }
 
-release=$(lsb_release -a)
+# 从/etc/os-release提取系统信息
+distro_id=$(grep -oP '(?<=^ID=).+' /etc/os-release | tr -d '"')
+distro_version_id=$(grep -oP '(?<=^VERSION_ID=).+' /etc/os-release | tr -d '"')
+distro_pretty_name=$(grep -oP '(?<=^PRETTY_NAME=).+' /etc/os-release | tr -d '"')
+
+# 组合系统信息
+release="发行版: $distro_pretty_name\n发行版ID: $distro_id\n版本: $distro_version_id"
 release=$(replace_newline_tab "$release")
 id=$(id)
 id=$(replace_newline_tab "$id")
@@ -189,7 +218,7 @@ data=$(cat <<EOF
         },
         {
             "role": "system",
-            "content": "以下是系统信息\n[echo \$SHELL]\n$SHELL\n[lsb_release -a]\n$release\n[id]\n$id\n[ls -aF]\n$ls\n[pwd]\n$pwd"
+            "content": "以下是系统信息\n[echo \$SHELL]\n$SHELL\n[系统信息]\n$release\n[id]\n$id\n[ls -aF]\n$ls\n[pwd]\n$pwd"
         },
         {
             "role": "user",
@@ -210,6 +239,12 @@ data=$(cat <<EOF
 }
 EOF
 )
+
+# 如果SHOW_DATA为true，显示data内容
+if [ "$SHOW_DATA" = true ]; then
+    echo "发送到API的数据:"
+    echo "$data" | jq .
+fi
 
 # 创建一个临时文件
 temp_file=$(mktemp /tmp/response_body.XXXXXX)

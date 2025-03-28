@@ -59,6 +59,22 @@ AIS 提供了几种简单的命令用于配置 AI 服务：
   ais setmodel gpt-4
   ```
 
+- **设置温度**: 使用 `ais settemp <TEMPERATURE>` 设置生成文本的随机性，范围从 0 到 1。
+  ```bash
+  ais settemp 0.7
+  ```
+  
+- **设置最大令牌数**: 使用 `ais setmax <MAX_TOKENS>` 设置生成文本的最大令牌数。
+  ```bash
+  ais setmax 100
+  ```
+
+- **显示当前配置**: 使用 `ais config` 查看当前的配置。
+  ```bash
+  ais config
+  ```
+
+
 ## 贡献
 
 欢迎提交问题、建议或 PR 来改善 AI-Shell。我们希望与开源社区共同发展，让 AI-Shell 更加强大和易用。
