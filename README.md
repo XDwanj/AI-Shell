@@ -17,6 +17,9 @@ ais 安装最新版本的git
 
 # 查找特定文件
 ais "在当前目录下查找所有的 .txt 文件"
+
+# -s 显示发出数据信息
+ais -s "在当前目录下查找所有的 .txt 文件"
 ```
 ## 安装指南
 
@@ -58,6 +61,22 @@ AIS 提供了几种简单的命令用于配置 AI 服务：
   ```bash
   ais setmodel gpt-4
   ```
+
+- **设置温度**: 使用 `ais settemp <TEMPERATURE>` 设置生成文本的随机性，范围从 0 到 1。
+  ```bash
+  ais settemp 0.7
+  ```
+
+- **设置最大令牌数**: 使用 `ais setmax <MAX_TOKENS>` 设置生成文本的最大令牌数。
+  ```bash
+  ais setmax 100
+  ```
+
+- **显示当前配置**: 使用 `ais config` 查看当前的配置。
+  ```bash
+  ais config
+  ```
+
 
 ## 贡献
 
