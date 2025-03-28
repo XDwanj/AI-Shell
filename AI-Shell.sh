@@ -265,19 +265,31 @@ if [ "$response" -ne 200 ]; then
   exit 1
 fi
 
-# 使用 jq 提取 content 字段
+# 提取 content
 content=$(echo "$response_body" | jq -r '.choices[0].message.content')
+if [ -z "$content" ] || [ "$content" = "null" ]; then
+    echo "错误：.choices[0].message.content 为空或不存在"
+    echo "response_body 内容："
+    echo "$response_body"
+    exit 1
+fi
 
 
-# 使用jq解析JSON
-msg=$(echo "$content" | jq -r '.msg')
-code=$(echo "$content" | jq -r '.code')
-commands=$(echo "$content" | jq -r '.command')
+# 移除 Markdown 代码块标记（如果存在）
+if echo "$content" | head -n1 | grep -q '^```json$' && echo "$content" | tail -n1 | grep -q '^```$'; then
+    clean_content=$(echo "$content" | sed '1d;$d')
+else
+    clean_content="$content"
+fi
 
-# 输出msg
+msg=$(echo "$clean_content" | jq -r '.msg')
+code=$(echo "$clean_content" | jq -r '.code')
+commands=$(echo "$clean_content" | jq -r '.command')
+
+# 输出 msg
 echo "$msg"
 
-# 判断code是否不等于0
+# 判断 code 是否不等于 0
 if [ "$code" -ne 0 ]; then
     exit 1
 fi
