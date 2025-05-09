@@ -95,12 +95,18 @@ func runExecute(cmd *cobra.Command, args []string) error {
 
 	// 如果showData为true，显示发送的数据
 	if showData {
-		fmt.Println("响应数据:")
-		fmt.Printf("%+v\n", aiResp)
+		fmt.Print("响应数据: ")
+		data, err := json.MarshalIndent(aiResp, "", "  ")
+		if err != nil {
+			return fmt.Errorf("格式化响应数据失败: %v", err)
+		}
+		fmt.Println(string(data))
 	}
 
 	// 输出提示信息
 	fmt.Println(aiResp.Msg)
+	fmt.Println("---------------------")
+	fmt.Println("可用的命令选项:")
 
 	// 检查翻译结果
 	if aiResp.Code != 0 {
