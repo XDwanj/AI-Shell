@@ -77,7 +77,11 @@ func runExecute(cmd *cobra.Command, args []string) error {
 	var aiResp AIResponse
 	content := resp.Choices[0].Message.Content
 
-	// 如果响应是Markdown格式，去除Markdown标记
+	// 如果响应是Markdown json 格式，去除Markdown标记
+	if len(content) > 7 && content[:7] == "```json" {
+		content = content[7:]
+	}
+	// 如果响应是Markdown js 格式，去除Markdown标记
 	if len(content) > 5 && content[:5] == "```js" {
 		content = content[5:]
 	}
