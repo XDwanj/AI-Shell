@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/XDwanj/AI-Shell/internal/config"
+	"AI-Shell/internal/config"
+
 	"github.com/spf13/cobra"
 )
 

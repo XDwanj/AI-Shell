@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/XDwanj/AI-Shell/cmd"
+	"AI-Shell/cmd"
 )
 
 func main() {

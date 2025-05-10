@@ -7,9 +7,10 @@ import (
 	"os/exec"
 	"strconv"
 
-	"github.com/XDwanj/AI-Shell/internal/config"
-	"github.com/XDwanj/AI-Shell/internal/openai"
-	"github.com/XDwanj/AI-Shell/internal/system"
+	"AI-Shell/internal/config"
+	"AI-Shell/internal/openai"
+	"AI-Shell/internal/system"
+
 	"github.com/spf13/cobra"
 )
 

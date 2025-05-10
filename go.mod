@@ -1,4 +1,4 @@
-module github.com/XDwanj/AI-Shell
+module AI-Shell
 
 go 1.24.2
 

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/XDwanj/AI-Shell/internal/config"
+	"AI-Shell/internal/config"
 )
 
 // Message 表示对话消息
