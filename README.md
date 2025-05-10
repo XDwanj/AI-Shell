@@ -100,6 +100,10 @@ ais config set temperature 0.7
    ais "统计当前目录下所有 .go 文件的代码行数"
    ```
 
+## 项目灵感
+
+感谢 [by123456by/AI-Shell](https://github.com/by123456by/AI-Shell) 带来的灵感
+
 ## 贡献
 
 欢迎提交问题、建议或 PR 来改善 AI-Shell。我们希望与开源社区共同发展，让 AI-Shell 更加强大和易用。
