@@ -143,6 +143,7 @@ func runExecute(cmd *cobra.Command, args []string) error {
 	// 执行选中的命令
 	selectedCmd := aiResp.Command[num-1]
 	fmt.Printf("执行命令: %s\n", selectedCmd)
+	fmt.Println("---------------------")
 
 	// 设置环境变量
 	env := os.Environ()
