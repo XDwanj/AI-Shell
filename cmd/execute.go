@@ -64,10 +64,23 @@ func runExecute(cmd *cobra.Command, args []string) error {
 	// 构建用户提示（包含系统信息）
 	userPrompt := sysInfo + "\n" + args[0]
 
-	// 发送请求到OpenAI
-	resp, err := client.SendRequest(systemPrompt, userPrompt)
-	if err != nil {
-		return fmt.Errorf("发送请求失败: %v", err)
+	var resp *openai.Response
+	var reqResp *openai.RequestResponse
+
+	// 根据是否需要显示数据选择不同的方法
+	if showData {
+		// 发送请求到OpenAI并获取请求和响应数据
+		reqResp, err = client.SendRequestWithData(systemPrompt, userPrompt)
+		if err != nil {
+			return fmt.Errorf("发送请求失败: %v", err)
+		}
+		resp = reqResp.Response
+	} else {
+		// 只发送请求到OpenAI
+		resp, err = client.SendRequest(systemPrompt, userPrompt)
+		if err != nil {
+			return fmt.Errorf("发送请求失败: %v", err)
+		}
 	}
 
 	if len(resp.Choices) == 0 {
@@ -94,14 +107,32 @@ func runExecute(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("解析响应失败: %v", err)
 	}
 
-	// 如果showData为true，显示发送的数据
+	// 如果showData为true，显示发送和接收的数据
 	if showData {
-		fmt.Print("响应数据: ")
-		data, err := json.MarshalIndent(aiResp, "", "  ")
+		fmt.Println("=== 请求和响应数据 ===")
+
+		// 显示发送的数据
+		fmt.Println("发送数据:")
+		requestData, err := json.MarshalIndent(reqResp.Request, "", "  ")
+		if err != nil {
+			return fmt.Errorf("格式化请求数据失败: %v", err)
+		}
+		fmt.Println(string(requestData))
+
+		fmt.Println("\n响应数据:")
+		responseData, err := json.MarshalIndent(reqResp.Response, "", "  ")
 		if err != nil {
 			return fmt.Errorf("格式化响应数据失败: %v", err)
 		}
-		fmt.Println(string(data))
+		fmt.Println(string(responseData))
+
+		fmt.Println("\n解析后的AI响应:")
+		aiRespData, err := json.MarshalIndent(aiResp, "", "  ")
+		if err != nil {
+			return fmt.Errorf("格式化AI响应数据失败: %v", err)
+		}
+		fmt.Println(string(aiRespData))
+		fmt.Println("======================")
 	}
 
 	// 输出提示信息
