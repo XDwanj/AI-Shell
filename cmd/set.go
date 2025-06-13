@@ -69,6 +69,14 @@ var (
 		Args:  cobra.ExactArgs(1),
 		RunE:  runSetTemperature,
 	}
+
+	setDebugCmd = &cobra.Command{
+		Use:   "debug [true|false]",
+		Short: "设置调试模式",
+		Long:  `启用或禁用调试模式，调试模式下会输出更多的日志信息。`,
+		Args:  cobra.ExactArgs(1),
+		RunE:  runSetDebug,
+	}
 )
 
 func init() {
@@ -84,6 +92,7 @@ func init() {
 	setCmd.AddCommand(setModelCmd)
 	setCmd.AddCommand(setMaxTokensCmd)
 	setCmd.AddCommand(setTemperatureCmd)
+	setCmd.AddCommand(setDebugCmd)
 }
 
 func runView(cmd *cobra.Command, args []string) error {
@@ -183,5 +192,23 @@ func runSetTemperature(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Printf("已设置 TEMPERATURE = %.1f\n", temp)
+	return nil
+}
+
+func runSetDebug(cmd *cobra.Command, args []string) error {
+	cfg, err := config.LoadConfig()
+	if err != nil {
+		return fmt.Errorf("加载配置失败: %v", err)
+	}
+	debugMode, err := strconv.ParseBool(args[0])
+	if err != nil {
+		return fmt.Errorf("无效的Debug模式值: %v", err)
+	}
+
+	if err := cfg.SetDebug(debugMode); err != nil {
+		return fmt.Errorf("设置Debug模式失败: %v", err)
+	}
+
+	fmt.Printf("已设置 Debug 模式 = %v\n", debugMode)
 	return nil
 }
