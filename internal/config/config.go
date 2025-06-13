@@ -128,6 +128,7 @@ func (c *Config) SetTemperature(temperature float64) error {
 	return c.SaveConfig()
 }
 
+// SetDebug 设置调试模式
 func (c *Config) SetDebug(debug bool) error {
 	slog.SetLogLoggerLevel(slog.LevelDebug) // 设置全局日志级别为 Debug
 	slog.Debug("设置配置项", "字段", "Debug", "值", debug)

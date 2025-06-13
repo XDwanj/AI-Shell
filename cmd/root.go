@@ -3,6 +3,7 @@ package cmd
 import (
 	"AI-Shell/internal/config"
 	"fmt"
+	"log/slog"
 
 	"github.com/spf13/cobra"
 )
@@ -33,16 +34,17 @@ var rootCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("加载配置失败: %w", err)
 		}
-
-		// 优先处理命令行标志
+		
+		// 设置日志级别
+		if cfg.Debug {
+			slog.SetLogLoggerLevel(slog.LevelDebug)
+		}
+		// 如果 debugMode 为 true，则设置日志级别为 Debug
 		if debugMode {
-			err := cfg.SetDebug(true)
-			if err != nil {
-				return fmt.Errorf("通过命令行启用Debug模式失败: %w", err)
-			}
+			slog.SetLogLoggerLevel(slog.LevelDebug)
 		}
 
-		return nil
+		return nil			
 	},
 }
 

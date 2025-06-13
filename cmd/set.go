@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -102,11 +103,11 @@ func runView(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Printf("当前配置:\n")
-	fmt.Printf("URL = %s\n", cfg.URL)
-	fmt.Printf("API_KEY = %s\n", cfg.APIKey)
-	fmt.Printf("MODEL = %s\n", cfg.Model)
-	fmt.Printf("MAX_TOKENS = %d\n", cfg.MaxTokens)
-	fmt.Printf("TEMPERATURE = %.1f\n", cfg.Temperature)
+	jsonData, err := json.MarshalIndent(cfg, "", "  ")
+	if err != nil {
+		return fmt.Errorf("序列化配置失败: %v", err)
+	}
+	fmt.Println(string(jsonData))
 
 	return nil
 }
